@@ -10,13 +10,14 @@ public class Parking {
     private final String nombre;
     private final long id,tel;
     private final String d;
-
+    private long ganancias;
+    
     public Parking(String nombre, int totalPlazas,long id,String d,long tel) {
         this.nombre = nombre;
         this.plazas = new String[totalPlazas][2];
         this.id = id;
         this.d = d;
-        this.tel =tel;
+        this.tel = tel;  
     }
 
     public String getNombre() {
@@ -71,7 +72,10 @@ public class Parking {
         double costoPorHora = 1200.0;
         double costoPorMinuto = 20.0;
         double costoTotal = (horas * costoPorHora) + (minutos * costoPorMinuto);
-
+        
+        synchronized (this) {
+            this.ganancias += costoTotal;
+        }
         plazas[plaza][0] = null;
         plazas[plaza][1] = null;
 
@@ -80,9 +84,8 @@ public class Parking {
         JOptionPane.showMessageDialog(null, "\n Tiempo de salida: "+ tiempoSalidaFormateado+"\n"+
                                         "Tiempo total dentro: " + horas + " horas y " + minutos + " minutos"+"\n"+
                                         "Costo total: $" + String.format("%.2f", costoTotal));
-
-  
-
+        
+        
         return "Plaza " + plaza;
     }
 
@@ -99,6 +102,10 @@ public class Parking {
         }
         return ocupadas;
     }
+    public double getGanancias() {
+        return ganancias;
+    }
+
 
     public int getPlazasLibres() {
         return getPlazasTotales() - getPlazasOcupadas();

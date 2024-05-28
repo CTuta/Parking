@@ -2,6 +2,7 @@ package Parking2;
 
 import Parking.Parking;
 import Parking.ParkingException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class Parqueadero2 {
@@ -14,16 +15,21 @@ public class Parqueadero2 {
         do {
             menu();
             accion();
-        } while (opcion != 5);  
+        } while (opcion != 7);  
     }
-
+    
+    static ArrayList<String> registro = new ArrayList<>();
+    
     public static void accion() {
         switch (opcion) {
             case 1 -> entradaCoche();
             case 2 -> salidaCoche();
             case 3 -> mostrarParking();
             case 4 -> configuracion(); 
-            case 5 -> JOptionPane.showMessageDialog(null, "Fin del del programa\n\n");
+            case 5 -> mostrarRegistro();
+            case 6 -> mostrarGanancias();
+            case 7 -> JOptionPane.showMessageDialog(null, "Fin del del programa\n\n");
+            
             default -> JOptionPane.showMessageDialog(null, "Error en la opción\n\n");
         }
     }
@@ -35,6 +41,7 @@ public class Parqueadero2 {
             int plaza = Integer.parseInt(JOptionPane.showInputDialog("Introduzca la plaza a aparcar: "));
            
             parking.entrada(m, plaza);
+            registro.add(m);
             correcto = true;
         } catch (ParkingException ex) {
             JOptionPane.showMessageDialog(null, "ERROR: " + ex.getMensaje() + "\nNo se realizó la entrada del coche con matrícula " + ex.getMatricula() + " en el parking");
@@ -75,7 +82,9 @@ public class Parqueadero2 {
                     "2) Salida de coche\n" +
                     "3) Mostrar parking\n" +
                     "4) Configuración\n" +
-                    "5) Salir del programa\n"
+                    "5) Mostrar registro de coches\n" + 
+                    "6) Mostrar Ganancias del dia\n" +        
+                    "7) Salir del programa\n"
             ));
         } catch (Exception ex) {
             opcion = 0;
@@ -104,4 +113,17 @@ public class Parqueadero2 {
     public static void mostrarParking() {
         JOptionPane.showMessageDialog(null, parking + "\n\n");
     }
+   public static void mostrarGanancias(){
+       double ganancias = parking.getGanancias();
+       JOptionPane.showMessageDialog(null, "Las Ganancias totales del dia fueron: "+ganancias);
+   }
+   public static void mostrarRegistro() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("Registro de coches durante el dia:\n\n");
+    for (int i = 0; i < registro.size(); i++) {
+        sb.append("Coche ").append(i + 1).append(": ").append(registro.get(i)).append("\n");
+    }
+    JOptionPane.showMessageDialog(null, sb.toString());
+}
+   
 }
